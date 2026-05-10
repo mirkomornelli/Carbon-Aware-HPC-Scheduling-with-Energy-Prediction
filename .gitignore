@@ -11,5 +11,5 @@ documentazione_progetto.html
 
 # Local datasets are intentionally not committed.
 data/*
+!data/README.md
 *.parquet
-
