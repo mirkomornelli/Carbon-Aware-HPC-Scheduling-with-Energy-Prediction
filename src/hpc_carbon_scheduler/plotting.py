@@ -6,7 +6,12 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-def save_energy_plots(predictions: pd.DataFrame, feature_importance: pd.DataFrame, output_dir: Path) -> None:
+def save_energy_plots(
+    predictions: pd.DataFrame,
+    feature_importance: pd.DataFrame,
+    output_dir: Path,
+    model_comparison: pd.DataFrame | None = None,
+) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     plot_df = predictions
     if "split" in predictions.columns and predictions["split"].eq("test").any():
@@ -43,6 +48,16 @@ def save_energy_plots(predictions: pd.DataFrame, feature_importance: pd.DataFram
     plt.tight_layout()
     plt.savefig(output_dir / "emissions_error_histogram.png", dpi=160)
     plt.close()
+
+    if model_comparison is not None and not model_comparison.empty:
+        ordered = model_comparison.sort_values("validation_energy_r2", ascending=True)
+        plt.figure(figsize=(8, 4.6))
+        plt.barh(ordered["model"], ordered["validation_energy_r2"], color="#2e6f86")
+        plt.xlabel("Validation R2")
+        plt.title("Energy model comparison")
+        plt.tight_layout()
+        plt.savefig(output_dir / "model_comparison_validation_r2.png", dpi=160)
+        plt.close()
 
 
 def save_scheduler_plots(metrics: pd.DataFrame, schedules: pd.DataFrame, carbon_curve: pd.DataFrame, output_dir: Path) -> None:

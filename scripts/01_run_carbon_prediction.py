@@ -38,11 +38,20 @@ def main() -> None:
 
     metrics = pd.DataFrame([artifacts.metrics])
     metrics.to_csv(args.output_dir / "metrics.csv", index=False)
+    artifacts.model_comparison.to_csv(args.output_dir / "model_comparison.csv", index=False)
     artifacts.predictions.to_csv(args.output_dir / "job_predictions.csv", index=False)
     artifacts.feature_importance.to_csv(args.output_dir / "feature_importance.csv", index=False)
-    save_energy_plots(artifacts.predictions, artifacts.feature_importance, args.output_dir)
+    save_energy_plots(
+        artifacts.predictions,
+        artifacts.feature_importance,
+        args.output_dir,
+        model_comparison=artifacts.model_comparison,
+    )
 
     print("Carbon/energy prediction completed")
+    print("Model comparison")
+    print(artifacts.model_comparison.to_string(index=False))
+    print("Selected model")
     print(metrics.to_string(index=False))
     print(f"Results written to: {args.output_dir}")
 

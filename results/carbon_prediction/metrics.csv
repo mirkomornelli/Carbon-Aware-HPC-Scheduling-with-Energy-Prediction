@@ -1,2 +1,2 @@
-rows_total,rows_train,rows_test,energy_mae_kwh,energy_rmse_kwh,energy_r2,emissions_mae_kg,emissions_rmse_kg,emissions_r2
-58846.0,44134.0,14712.0,6.763108135720623,35.424431830875236,0.4922089685302362,2.4563614112135044,12.854254593419917,0.46833558961886734
+selected_model,selection_metric,selected_validation_energy_r2,selected_validation_energy_mae_kwh,rows_total,rows_train,rows_validation,rows_test,test_energy_mae_kwh,test_energy_rmse_kwh,test_energy_r2,test_emissions_mae_kg,test_emissions_rmse_kg,test_emissions_r2
+hist_gradient_boosting,validation_energy_r2,0.55585954401005,6.407520579265461,58846.0,35307.0,11769.0,11770.0,5.807825080984019,33.13174652939691,0.3407515692015438,2.1325089149119676,12.171746435506211,0.34033277468395295
