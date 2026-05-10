@@ -103,7 +103,20 @@ Scheduling simulation over 10 real weeks:
 | Random delay | 12,000 | 27,079 kg CO2 | 1.04% | 11.74 h |
 | Carbon-aware | 12,000 | 25,965 kg CO2 | 5.11% | 12.40 h |
 
-The carbon-aware policy saves about 1,399 kg CO2 compared with FCFS, at the cost of additional waiting time.
+Carbon-aware savings compared with FCFS:
+
+| Statistic | Value |
+| --- | ---: |
+| Total CO2 saved | 1,399.21 kg CO2 |
+| Average CO2 saved per week | 139.92 kg CO2 |
+| Minimum weekly CO2 saved | 44.61 kg CO2 |
+| Maximum weekly CO2 saved | 431.22 kg CO2 |
+| Total weighted reduction | 5.11% |
+| Average weekly reduction | 7.46% |
+| Minimum weekly reduction | 3.07% |
+| Maximum weekly reduction | 14.41% |
+
+The weighted reduction is computed on total emissions across all simulated jobs. The weekly average is the simple average of the 10 weekly percentage reductions, so it gives more visibility to week-by-week variability.
 
 ## Notes
 
