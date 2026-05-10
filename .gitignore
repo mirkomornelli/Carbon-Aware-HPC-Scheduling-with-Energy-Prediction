@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+evn/
+
+# Local datasets are intentionally not committed.
+data/*
+!data/README.md
+*.parquet
+
+# Temporary smoke-test output.
+results/carbon_prediction_smoke/
+results/review_smoke_*/

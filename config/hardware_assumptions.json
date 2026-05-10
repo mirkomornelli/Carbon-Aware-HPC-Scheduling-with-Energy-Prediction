@@ -1,0 +1,17 @@
+{
+  "available_nodes": 980,
+  "processors_per_node": 16,
+  "memory_per_node": 256000,
+  "capacity_processors": 15680,
+  "slot_minutes": 30,
+  "max_delay_hours": 24,
+  "primary_resource_constraint": "num_nodes_req interpreted as requested processors",
+  "notes": [
+    "Professor notes specify 980 available nodes, 16 processors per node and 256000 memory per node.",
+    "The PM100 column num_nodes_req is treated as requested processors, despite the misleading name.",
+    "The total processor capacity is therefore 980 * 16 = 15680.",
+    "A job can run if, for every occupied slot, used_processors + job.num_nodes_req <= 15680.",
+    "Under normal PM100 submission frequency the system is rarely close to saturation; capacity can be considered effectively non-limiting for many experiments.",
+    "Memory is documented here but is not yet a hard scheduling constraint."
+  ]
+}
