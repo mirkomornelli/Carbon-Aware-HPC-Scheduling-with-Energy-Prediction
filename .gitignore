@@ -6,11 +6,10 @@ venv/
 env/
 evn/
 
+# Local report kept outside the GitHub repository.
+documentazione_progetto.html
+
 # Local datasets are intentionally not committed.
 data/*
-!data/README.md
 *.parquet
 
-# Temporary smoke-test output.
-results/carbon_prediction_smoke/
-results/review_smoke_*/

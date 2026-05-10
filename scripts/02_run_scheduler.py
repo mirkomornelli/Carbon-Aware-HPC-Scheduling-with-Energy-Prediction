@@ -9,8 +9,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from project_rebuild.plotting import save_scheduler_plots, save_weekly_scheduler_plots
-from project_rebuild.scheduler import available_week_starts, prepare_week_jobs, run_scheduler
+from hpc_carbon_scheduler.plotting import save_scheduler_plots, save_weekly_scheduler_plots
+from hpc_carbon_scheduler.scheduler import available_week_starts, prepare_week_jobs, run_scheduler
 
 
 def parse_args() -> argparse.Namespace:

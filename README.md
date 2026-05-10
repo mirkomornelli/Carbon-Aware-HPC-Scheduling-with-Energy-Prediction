@@ -27,14 +27,13 @@ project_rebuild/
   scripts/
     01_run_carbon_prediction.py
     02_run_scheduler.py
-  src/project_rebuild/
+  src/hpc_carbon_scheduler/
     carbon_model.py
     scheduler.py
     plotting.py
   results/
     carbon_prediction/
     scheduler/
-  documentazione_progetto.html
   requirements.txt
 ```
 
@@ -44,12 +43,11 @@ project_rebuild/
 | --- | --- |
 | `scripts/01_run_carbon_prediction.py` | Runs the prediction phase: data loading, feature engineering, model training, metrics, and plots. |
 | `scripts/02_run_scheduler.py` | Runs the multi-week scheduling simulation. |
-| `src/project_rebuild/carbon_model.py` | Contains data preparation, energy/emissions targets, chronological split, and the Random Forest model. |
-| `src/project_rebuild/scheduler.py` | Contains the scheduler logic, weekly-window selection, and capacity checks. |
-| `src/project_rebuild/plotting.py` | Generates the plots used by the notebooks and result folders. |
+| `src/hpc_carbon_scheduler/carbon_model.py` | Contains data preparation, energy/emissions targets, chronological split, and the Random Forest model. |
+| `src/hpc_carbon_scheduler/scheduler.py` | Contains the scheduler logic, weekly-window selection, and capacity checks. |
+| `src/hpc_carbon_scheduler/plotting.py` | Generates the plots used by the notebooks and result folders. |
 | `notebooks/01_carbon_prediction.ipynb` | Notebook for inspecting and explaining the prediction results. |
 | `notebooks/02_scheduler_simulation.ipynb` | Notebook for inspecting and explaining the scheduling results. |
-| `documentazione_progetto.html` | Browser-ready project report. It is kept in Italian and is not required for GitHub usage. |
 
 ## Phase 1: Energy and Emissions Prediction
 
@@ -110,7 +108,7 @@ In the PM100 dataset, the column `num_nodes_req` is treated as the number of req
 The original dataset is not committed to this repository. By default, the scripts expect it at:
 
 ```text
-../project/job_table.parquet
+data/job_table.parquet
 ```
 
 If the file is stored elsewhere, pass the path explicitly with `--input`:
@@ -120,6 +118,8 @@ python scripts/01_run_carbon_prediction.py --input path/to/job_table.parquet --m
 ```
 
 The final run uses the first 60,000 records sorted chronologically. After filtering, 58,846 valid jobs remain across 10 real weeks.
+
+The repository is therefore standalone in terms of code, notebooks, documentation, and generated results. The only external artifact is the raw PM100 parquet dataset, which should be copied into `data/job_table.parquet` if you want to regenerate the pipeline from scratch.
 
 ## Installation
 
@@ -245,13 +245,7 @@ Scheduler:
 - `results/scheduler/scheduler_emissions_comparison.png`
 - `results/scheduler/scheduler_wait_comparison.png`
 
-## Documentation and Notebooks
-
-For a browser-ready project report:
-
-```text
-documentazione_progetto.html
-```
+## Notebooks
 
 For exploratory result inspection:
 
