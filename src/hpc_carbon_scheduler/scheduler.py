@@ -86,7 +86,10 @@ def prepare_week_jobs(
     week_end = week_start + pd.Timedelta(days=days)
     week = df[(df["submit_time"] >= week_start) & (df["submit_time"] < week_end)].copy()
 
-    week = week.sort_values("submit_time").head(max_jobs).reset_index(drop=True)
+    week = week.sort_values("submit_time")
+    if max_jobs > 0:
+        week = week.head(max_jobs)
+    week = week.reset_index(drop=True)
     return week, week_start
 
 

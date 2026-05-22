@@ -29,7 +29,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--slot-minutes", type=int, default=30)
     parser.add_argument("--max-delay-hours", type=int, default=24)
-    parser.add_argument("--max-jobs", type=int, default=1200, help="Maximum jobs per simulated week.")
+    parser.add_argument(
+        "--max-jobs",
+        type=int,
+        default=1200,
+        help="Maximum jobs per simulated week. Use 0 to schedule every available job in each week.",
+    )
     parser.add_argument(
         "--num-weeks",
         type=int,
@@ -38,7 +43,7 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--split",
-        choices=["all", "train", "test"],
+        choices=["all", "train", "validation", "test"],
         default="all",
         help="Subset of prediction rows to schedule. 'all' gives the widest multi-week simulation.",
     )
@@ -90,6 +95,26 @@ def aggregate_metrics(schedules: pd.DataFrame, skipped: pd.DataFrame, weekly_met
         metrics["avg_wait_delta_vs_fcfs_h"] = metrics["avg_wait_h"] - base["avg_wait_h"]
     metrics["policy"] = pd.Categorical(metrics["policy"], categories=POLICY_ORDER, ordered=True)
     return metrics.sort_values("policy").reset_index(drop=True)
+
+
+def carbon_aware_weekly_savings(weekly_metrics: pd.DataFrame) -> pd.DataFrame:
+    if weekly_metrics.empty:
+        return pd.DataFrame(columns=["week_index", "week_start", "fcfs_kg", "carbon_aware_kg", "saved_kg", "reduction_pct"])
+
+    fcfs = weekly_metrics[weekly_metrics["policy"].eq("fcfs")][
+        ["week_index", "week_start", "total_actual_emissions_kg"]
+    ].rename(columns={"total_actual_emissions_kg": "fcfs_kg"})
+    carbon_aware = weekly_metrics[weekly_metrics["policy"].eq("carbon_aware")][
+        ["week_index", "total_actual_emissions_kg", "emissions_reduction_vs_fcfs_pct"]
+    ].rename(
+        columns={
+            "total_actual_emissions_kg": "carbon_aware_kg",
+            "emissions_reduction_vs_fcfs_pct": "reduction_pct",
+        }
+    )
+    savings = fcfs.merge(carbon_aware, on="week_index", how="inner")
+    savings["saved_kg"] = savings["fcfs_kg"] - savings["carbon_aware_kg"]
+    return savings[["week_index", "week_start", "fcfs_kg", "carbon_aware_kg", "saved_kg", "reduction_pct"]]
 
 
 def main() -> None:
@@ -175,9 +200,11 @@ def main() -> None:
         weekly_metrics["avg_wait_delta_vs_fcfs_h"] = weekly_metrics["avg_wait_h"] - weekly_metrics["fcfs_avg_wait_h"]
 
     metrics = aggregate_metrics(all_schedules, all_skipped, weekly_metrics)
+    weekly_savings = carbon_aware_weekly_savings(weekly_metrics)
 
     metrics.to_csv(args.output_dir / "scheduler_metrics.csv", index=False)
     weekly_metrics.to_csv(args.output_dir / "scheduler_weekly_metrics.csv", index=False)
+    weekly_savings.to_csv(args.output_dir / "carbon_aware_weekly_savings.csv", index=False)
     all_schedules.to_csv(args.output_dir / "schedules.csv", index=False)
     all_skipped.to_csv(args.output_dir / "skipped_jobs.csv", index=False)
     if not all_carbon_curves.empty:
